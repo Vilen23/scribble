@@ -1,7 +1,8 @@
+"use client"
 import React from 'react'
 import { Source_Serif_4 } from 'next/font/google'
 import { work } from './Navbar'
-const serif = Source_Serif_4({ weight: '500', subsets: ['latin'] })
+export const serif = Source_Serif_4({ weight: '500', subsets: ['latin'] })
 const serif2 = Source_Serif_4({ weight: '400', subsets: ['latin'] })    
 export default function Hero() {
   return (
