@@ -11,6 +11,7 @@ import {
     AlertDialogTrigger,
   } from "@/components/ui/alert-dialog"
   import { work } from "./Navbar"
+  import { serif } from './Hero'
   import { useRouter } from "next/navigation"
 export default function LoginAlert() {
     const router = useRouter();
@@ -21,8 +22,8 @@ export default function LoginAlert() {
         </AlertDialogTrigger>
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>You need to Log In first</AlertDialogTitle>
-            <AlertDialogDescription>
+            <AlertDialogTitle className={`${work.className} text-2xl `}>You need to Log In first</AlertDialogTitle>
+            <AlertDialogDescription className='text-sm'>
               In order to Make a room and play the game you first need to Log In.
             </AlertDialogDescription>
           </AlertDialogHeader>
