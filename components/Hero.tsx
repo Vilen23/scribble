@@ -2,6 +2,7 @@
 import React from 'react'
 import { Source_Serif_4 } from 'next/font/google'
 import { work } from './Navbar'
+import {MakeRoomButton} from './MakeRoomButton'
 export const serif = Source_Serif_4({ weight: '500', subsets: ['latin'] })
 const serif2 = Source_Serif_4({ weight: '400', subsets: ['latin'] })    
 export default function Hero() {
@@ -16,7 +17,7 @@ export default function Hero() {
             "Grab your digital pen and let creativity flow in a world where every scribble tells a story!"
             </div>
             <div className="mt-10">
-                <button className={`${work.className} bg-black px-3 py-3 text-[14px] rounded-3xl hover:bg-black/80 text-white`}>Get Started</button>
+                <MakeRoomButton/>
             </div>
         </div>
     </div>
