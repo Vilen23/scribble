@@ -13,12 +13,12 @@ import {
   import { work } from "./Navbar"
   import { serif } from './Hero'
   import { useRouter } from "next/navigation"
-export default function LoginAlert() {
+export default function LoginAlert({title}:{title:string}) {
     const router = useRouter();
   return (
     <AlertDialog>
         <AlertDialogTrigger asChild>
-          <button className={`${work.className} hover:bg-black/80 bg-black text-white px-3 py-2 rounded-3xl`}>Make room</button>
+          <button className={`${work.className} hover:bg-black/80 bg-black text-white px-3 py-2 rounded-3xl`}>{title}</button>
         </AlertDialogTrigger>
         <AlertDialogContent>
           <AlertDialogHeader>

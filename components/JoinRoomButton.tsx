@@ -3,12 +3,13 @@ import { useSession } from "next-auth/react";
 import LoginAlert from "./LoginAlert";
 import { work } from "./Navbar";
 import MakeRoomAlert from "./MakeRoomAlert";
-export function MakeRoomButton() {
+import JoinRoomAlert from "./JoinRoomAlerts";
+export function JoinRoomButton() {
   const session = useSession();
   if (session.data?.user) {
     return (
-      <MakeRoomAlert/>
+      <JoinRoomAlert/>
     );
   }
-  return <LoginAlert title="Make Room"/>;
+  return <LoginAlert title="Join Room"/>;
 }

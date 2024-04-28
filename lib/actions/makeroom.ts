@@ -1,7 +1,7 @@
 "use server"
 
-import { NEXT_AUTH } from "@/app/lib/auth"
-import prisma from "@/app/lib/db";
+import { NEXT_AUTH } from "@/lib/auth"
+import prisma from "@/lib/db";
 import { getServerSession } from "next-auth"
 
 export const MakeRoom = async(name:string,password:string)=>{

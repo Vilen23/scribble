@@ -3,6 +3,7 @@ import React from 'react'
 import { Source_Serif_4 } from 'next/font/google'
 import { work } from './Navbar'
 import {MakeRoomButton} from './MakeRoomButton'
+import { JoinRoomButton } from './JoinRoomButton'
 export const serif = Source_Serif_4({ weight: '500', subsets: ['latin'] })
 const serif2 = Source_Serif_4({ weight: '400', subsets: ['latin'] })    
 export default function Hero() {
@@ -16,8 +17,9 @@ export default function Hero() {
             <div className={`${work.className} mt-5 text-[14px] text-center text-[#0d0c22]`}>
             "Grab your digital pen and let creativity flow in a world where every scribble tells a story!"
             </div>
-            <div className="mt-10">
+            <div className="mt-10 flex gap-4">
                 <MakeRoomButton/>
+                <JoinRoomButton/>
             </div>
         </div>
     </div>
