@@ -12,6 +12,8 @@ import { serif } from "./Hero";
 import { FaRegEye, FaRegEyeSlash } from 'react-icons/fa';
 import { useRouter } from 'next/navigation';
 import { JoinRoom } from '@/lib/actions/joinroom';
+import { useSetRecoilState } from 'recoil';
+import { roomUserAtom } from '@/states/roomUser';
 
 interface JoinRoomProps{
   name:string;
@@ -20,24 +22,27 @@ interface JoinRoomProps{
 
 export default function JoinRoomAlert() {
   const router = useRouter();
+  const setRoomUser = useSetRecoilState(roomUserAtom);
   const [showPassword, setShowPassword] = useState(false);
   const [room, setRoom] = useState<JoinRoomProps>({
     name: "",
     password: ""
   })
+  
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
   };
-  const handleCreateRoom = async()=>{
+
+  const handleJoinRoom = async()=>{
     const res = await JoinRoom(room.name,room.password);
     const roomid = res.room?.id;
-    console.log(roomid);
+    setRoomUser(res.roomUser);
     router.push(`/room/${roomid}`)
   }
   return (
     <Dialog>
       <DialogTrigger>
-        <button className={`${work.className} px-3 py-2 rounded-3xl bg-black text-white hover:bg-black/80`}>Join Room</button>
+        <div className={`${work.className} px-3 py-2 rounded-3xl bg-black text-white hover:bg-black/80`}>Join Room</div>
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>
@@ -61,7 +66,7 @@ export default function JoinRoomAlert() {
             </button>
           </div>
           <div>
-            <button onClick={handleCreateRoom} className={`${work.className} px-3 py-2 rounded-3xl bg-black text-white hover:bg-black/80`}>Join Room</button>
+            <button onClick={handleJoinRoom} className={`${work.className} px-3 py-2 rounded-3xl bg-black text-white hover:bg-black/80`}>Join Room</button>
           </div>
         </div>
       </DialogContent>

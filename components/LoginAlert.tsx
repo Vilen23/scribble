@@ -18,7 +18,7 @@ export default function LoginAlert({title}:{title:string}) {
   return (
     <AlertDialog>
         <AlertDialogTrigger asChild>
-          <button className={`${work.className} hover:bg-black/80 bg-black text-white px-3 py-2 rounded-3xl`}>{title}</button>
+          <div className={`${work.className} hover:bg-black/80 bg-black text-white px-3 py-2 rounded-3xl`}>{title}</div>
         </AlertDialogTrigger>
         <AlertDialogContent>
           <AlertDialogHeader>
