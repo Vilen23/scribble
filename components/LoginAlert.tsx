@@ -11,8 +11,9 @@ import {
     AlertDialogTrigger,
   } from "@/components/ui/alert-dialog"
   import { work } from "./Navbar"
-  import { serif } from './Hero'
   import { useRouter } from "next/navigation"
+
+  
 export default function LoginAlert({title}:{title:string}) {
     const router = useRouter();
   return (

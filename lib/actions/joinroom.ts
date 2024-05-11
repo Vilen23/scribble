@@ -19,7 +19,7 @@ export const JoinRoom = async(name:string,password:string)=>{
             roomId:room.id
         }
     })
-    const ws = new WebSocket('ws://localhost:8000');
+    const ws = new WebSocket('ws://localhost:8080');
     ws.on('open', function open() {
         ws.send(JSON.stringify({ type: 'userJoined', room }));
         ws.close();

@@ -1,3 +1,4 @@
+"use client";
 import React, { useState } from "react";
 import {
   Dialog,
@@ -14,6 +15,8 @@ import { MakeRoom } from "@/lib/actions/Room";
 import { useRouter } from "next/navigation";
 import { useSetRecoilState } from "recoil";
 import { roomUserAtom } from "@/states/roomUser";
+import axios from "axios";
+import { useSession } from "next-auth/react";
 
 interface MakeRoomProps {
   name: string;
@@ -21,6 +24,7 @@ interface MakeRoomProps {
 }
 
 export default function MakeRoomAlert() {
+  const session = useSession();
   const router = useRouter();
   const setRoomUser = useSetRecoilState(roomUserAtom);
   const [showPassword, setShowPassword] = useState(false);
@@ -34,9 +38,15 @@ export default function MakeRoomAlert() {
   };
 
   const handleCreateRoom = async () => {
-    const res = await MakeRoom(room.name, room.password);
-    const roomid = res.room?.id;
-    setRoomUser(res.roomUser);
+    const res = await axios.post(
+      `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/room/makeRoom/?userId=${session.data?.user.id}`,
+      {
+        name: room.name,
+        password: room.password,
+      }
+    );
+    const roomid = res.data.room?.id;
+    setRoomUser(res.data.roomUser);
     router.push(`/room/${roomid}`);
   };
 

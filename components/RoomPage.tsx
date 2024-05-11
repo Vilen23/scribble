@@ -50,34 +50,47 @@ export default function RoomPage() {
 
   useEffect(() => {
     const fetchRoomInfo = async () => {
-      const res = await axios.get(`/api/room/${roomid[0]}`);
+      const res = await axios.get(
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/room/getRoom/?roomId=${roomid[0]}&userId=${session.data?.user.id}`
+      );
       setRoom(res.data);
       console.log(res.data);
     };
-    fetchRoomInfo();
-  }, []);
+    if (session.data?.user.id) fetchRoomInfo();
+  }, [session.data?.user.id]);
 
   useEffect(() => {
     const ws = new WebSocket(`ws://localhost:8080`);
     ws.onmessage = function (event) {
-      console.log(event.data);
-      const message = event.data;
-      if (message.type === "userJoined") {
+      let message;
+      try {
+        message = JSON.parse(event.data);
+      } catch (error) {
+        console.error("Error parsing WebSocket message:", error);
+        return;
+      }
+      if (message.type === "user_joined") {
+        alert("User Joined");
         setRoom((prevRoom) => ({
           ...prevRoom,
           roomUsers: [...prevRoom.roomUsers, message.user],
         }));
       }
-      return () => {
-        ws.close();
-      };
+    };
+    return () => {
+      ws.close();
     };
   }, []);
 
   const handleLeaveServer = async () => {
     try {
-      const res = await LeaveRoom(roomid[0], roomUser.id);
-      console.log(res);
+      const res = await axios.post(
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/room/leaveRoom/?userId=${session.data?.user.id}`,
+        {
+          roomId: room.room.id,
+          roomUserId: roomUser.id,
+        }
+      );
       setRoomUser(null);
       router.push("/");
     } catch (error) {

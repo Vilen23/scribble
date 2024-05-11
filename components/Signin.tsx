@@ -11,26 +11,26 @@ interface SigninProps {
 }
 
 export default function Signin() {
-    const router = useRouter();
+  const router = useRouter();
   const [user, setUser] = useState<SigninProps>({ name: "", password: "" });
   const session = useSession();
+
+  useEffect(() => {
+    if (session.data?.user) {
+      router.push("/");
+    }
+  }, [session]);
+  
   const handleLogin = async () => {
     console.log("Logging in...");
     const res = await signIn("credentials", {
-        redirect: true,
-        name: user.name,
-        password: user.password,
-        callbackUrl: "/",
+      redirect: true,
+      name: user.name,
+      password: user.password,
+      callbackUrl: "/",
     });
-    console.log(res);
   };
-  useEffect(()=>{
-    if(session.data?.user){
-        router.push("/")
-    }
-  },[session])
   
-
   return (
     <div className="flex justify-center items-center">
       <div className="w-[800px] flex flex-col items-center">
