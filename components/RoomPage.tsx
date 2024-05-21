@@ -5,7 +5,6 @@ import { serif } from "./Hero";
 import { IoExitOutline } from "react-icons/io5";
 import { Avatar, AvatarFallback } from "./ui/avatar";
 import { useSession } from "next-auth/react";
-import { LeaveRoom } from "@/lib/actions/Room";
 import { useRecoilState } from "recoil";
 import { roomUserAtom } from "@/states/roomUser";
 interface RoomProps {
@@ -54,7 +53,6 @@ export default function RoomPage() {
         `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/room/getRoom/?roomId=${roomid[0]}&userId=${session.data?.user.id}`
       );
       setRoom(res.data);
-      console.log(res.data);
     };
     if (session.data?.user.id) fetchRoomInfo();
   }, [session.data?.user.id]);
@@ -70,10 +68,17 @@ export default function RoomPage() {
         return;
       }
       if (message.type === "user_joined") {
-        alert("User Joined");
         setRoom((prevRoom) => ({
           ...prevRoom,
           roomUsers: [...prevRoom.roomUsers, message.user],
+        }));
+      }
+      if (message.type === "user_left") {
+        setRoom((prevRoom) => ({
+          ...prevRoom,
+          roomUsers: prevRoom.roomUsers.filter(
+            (user) => user.id !== message.user.id
+          ),
         }));
       }
     };

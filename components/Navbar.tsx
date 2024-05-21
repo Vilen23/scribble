@@ -1,13 +1,11 @@
 "use client";
 import React from "react";
-import { Allura, Work_Sans } from "next/font/google";
+import { Cedarville_Cursive, Work_Sans } from "next/font/google";
 import { useRouter } from "next/navigation";
 import { signOut, useSession } from "next-auth/react";
 export const work = Work_Sans({ weight: "500", subsets: ["latin"] });
-const alura = Allura({
-  weight: "400",
-  subsets: ["latin"],
-});
+const alura = Cedarville_Cursive({ weight: "400", subsets: ["latin"] });
+
 export default function Navbar() {
   const router = useRouter();
   const session = useSession();
@@ -39,9 +37,7 @@ export default function Navbar() {
         </div>
       ) : (
         <div className="flex gap-4 items-center">
-          <div
-            className={` ${alura.className} text-[22px]`}
-          >
+          <div className={` ${alura.className} text-[22px]`}>
             Hi,
             <span className={`${work.className} text-[18px] `}>
               {" "}
@@ -49,7 +45,7 @@ export default function Navbar() {
             </span>
           </div>
           <button
-          onClick={handleLogout}
+            onClick={handleLogout}
             className={`${work.className} bg-black text-white rounded-3xl px-3 py-2 text-[14px] flex items-center hover:bg-black/80`}
           >
             Log Out

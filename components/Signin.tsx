@@ -22,7 +22,6 @@ export default function Signin() {
   }, [session]);
   
   const handleLogin = async () => {
-    console.log("Logging in...");
     const res = await signIn("credentials", {
       redirect: true,
       name: user.name,

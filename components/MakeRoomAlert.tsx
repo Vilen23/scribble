@@ -11,7 +11,6 @@ import {
 import { work } from "./Navbar";
 import { serif } from "./Hero";
 import { FaRegEye, FaRegEyeSlash } from "react-icons/fa";
-import { MakeRoom } from "@/lib/actions/Room";
 import { useRouter } from "next/navigation";
 import { useSetRecoilState } from "recoil";
 import { roomUserAtom } from "@/states/roomUser";
@@ -54,7 +53,7 @@ export default function MakeRoomAlert() {
     <Dialog>
       <DialogTrigger>
         <div
-          className={`${work.className} px-3 py-2 rounded-3xl bg-black text-white hover:bg-black/80`}
+          className={`${work.className} px-3 py-2 rounded-3xl bg-black text-white hover:bg-black/80 cursor-pointer`}
         >
           Make Room
         </div>

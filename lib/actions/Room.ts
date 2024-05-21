@@ -42,7 +42,6 @@ export const LeaveRoom = async(roomId:string,roomUserid:string)=>{
                 roomId
             }
         })
-        // console.log(roomUser)
         if(roomUser.length === 0){
             const deleteRoom = await prisma.room.delete({
                 where:{

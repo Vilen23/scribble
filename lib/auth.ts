@@ -15,7 +15,6 @@ export const NEXT_AUTH = {
         },
       },
       async authorize(credentials: any) {
-        console.log(credentials);
         const response = await axios.post(
           `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/auth/signin`,
           {
