@@ -1,18 +1,58 @@
-import { EraserIcon, Pencil1Icon } from "@radix-ui/react-icons";
+"use client";
+import axios from "axios";
 import Konva from "konva";
 import { KonvaEventObject } from "konva/lib/Node";
-import React from "react";
+import { useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
+import React, { useEffect } from "react";
 import { FaEraser, FaPencilAlt } from "react-icons/fa";
-import { Circle, Layer, Line, Rect, Stage, Text } from "react-konva";
+import { Layer, Line, Stage } from "react-konva";
 
 interface LineProps {
   tool: string;
   points: number[];
 }
-export default function Canvas() {
+
+export default function Canvas(roomId: any) {
+  console.log(roomId.roomId[0]);
+  const session = useSession();
+  const router = useRouter();
   const [tool, setTool] = React.useState("pen");
   const [lines, setLines] = React.useState<LineProps[]>([]);
   const isDrawing = React.useRef(false);
+
+
+  useEffect(() => {
+    const fetchDrawing = async () => {
+      const response = await axios.get(
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/canvas/get/?roomId=${roomId.roomId[0]}&userId=${session?.data?.user.id}`
+      );
+      console.log(response);
+      setLines(response.data)
+    };
+    try {
+      fetchDrawing();
+    } catch (error) {
+      console.log(error);
+    }
+  },[session]);
+
+  useEffect(() => {
+    //whenever the line changes send it to the db and make the socket call to the other people in the room
+    const postDrawing = async () => {
+      const response = await axios.post(
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/canvas/add/?roomId=${roomId.roomId[0]}&userId=${session?.data?.user.id}`,
+        {
+          lines,
+        }
+      );
+    };
+    try {
+      postDrawing();
+    } catch (error) {
+      console.log(error);
+    }
+  }, [lines]);
 
   const handleMouseDown = (e: KonvaEventObject<MouseEvent>) => {
     isDrawing.current = true;
@@ -59,7 +99,7 @@ export default function Canvas() {
         />
       </div>
       <Stage
-      className="border-2 border-black/80"
+        className="border-2 border-black/80"
         width={window.innerWidth}
         height={400}
         onMouseDown={handleMouseDown}
@@ -77,7 +117,7 @@ export default function Canvas() {
               lineCap="round"
               lineJoin="round"
               globalCompositeOperation={
-                line.tool === 'eraser' ? 'destination-out' : 'source-over'
+                line.tool === "eraser" ? "destination-out" : "source-over"
               }
             />
           ))}

@@ -145,7 +145,7 @@ export default function RoomPage() {
           ))}
         </div>
         <div className="w-[50%] ">
-          <Canvas/>
+          <Canvas roomId={roomid}/>
         </div>
         <div className="w-[20%]">Hi3</div>
       </div>
