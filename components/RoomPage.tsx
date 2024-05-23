@@ -7,6 +7,7 @@ import { Avatar, AvatarFallback } from "./ui/avatar";
 import { useSession } from "next-auth/react";
 import { useRecoilState } from "recoil";
 import { roomUserAtom } from "@/states/roomUser";
+import Canvas from "./Canvas";
 interface RoomProps {
   createdBy: {
     createdAt: string;
@@ -132,8 +133,8 @@ export default function RoomPage() {
               <p
                 className={`${
                   user.name === session.data?.user?.name
-                    ? "text-black font-medium cursor-pointer"
-                    : "cursor-pointer text-black/70 font-normal hover:text-black"
+                    ? "text-black font-medium cursor-pointer text-sm"
+                    : "cursor-pointer text-black/70 font-normal hover:text-black text-sm"
                 }`}
               >
                 {user.name === session.data?.user?.name
@@ -143,7 +144,9 @@ export default function RoomPage() {
             </div>
           ))}
         </div>
-        <div className="w-[50%] ">Hi2</div>
+        <div className="w-[50%] ">
+          <Canvas/>
+        </div>
         <div className="w-[20%]">Hi3</div>
       </div>
     </div>
