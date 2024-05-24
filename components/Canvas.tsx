@@ -4,55 +4,69 @@ import Konva from "konva";
 import { KonvaEventObject } from "konva/lib/Node";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { FaEraser, FaPencilAlt } from "react-icons/fa";
 import { Layer, Line, Stage } from "react-konva";
-
+import { debounce } from "lodash";
 interface LineProps {
   tool: string;
   points: number[];
 }
 
 export default function Canvas(roomId: any) {
-  console.log(roomId.roomId[0]);
   const session = useSession();
   const router = useRouter();
-  const [tool, setTool] = React.useState("pen");
-  const [lines, setLines] = React.useState<LineProps[]>([]);
+  const [tool, setTool] = useState("pen");
+  const [lines, setLines] = useState<LineProps[]>([
+  ]);
   const isDrawing = React.useRef(false);
 
+  const debouncedDrawingPost = async (lines:LineProps[], roomId:string, userId:string) => {
+    try {
+      await axios.post(
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/canvas/add/?roomId=${roomId}&userId=${userId}`,
+        {
+          lines,
+        }
+      );
+    } catch (error) {
+      console.log(error);
+    }
+  }
 
   useEffect(() => {
+    if (!session.data?.user.id) return;
     const fetchDrawing = async () => {
       const response = await axios.get(
         `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/canvas/get/?roomId=${roomId.roomId[0]}&userId=${session?.data?.user.id}`
       );
-      console.log(response);
-      setLines(response.data)
+      setLines(response.data);
     };
     try {
       fetchDrawing();
     } catch (error) {
       console.log(error);
     }
-  },[session]);
+  }, [session]);
 
   useEffect(() => {
-    //whenever the line changes send it to the db and make the socket call to the other people in the room
-    const postDrawing = async () => {
-      const response = await axios.post(
-        `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/canvas/add/?roomId=${roomId.roomId[0]}&userId=${session?.data?.user.id}`,
-        {
-          lines,
-        }
-      );
+    const ws = new WebSocket("ws://localhost:8080");
+    ws.onmessage = (event) => {
+      let message;
+      try {
+        message = JSON.parse(event.data);
+      } catch (error) {
+        console.log(error);
+        return;
+      }
+      if (message.type === "drawing_updated") {
+          setLines(message.drawing);
+      }
     };
-    try {
-      postDrawing();
-    } catch (error) {
-      console.log(error);
-    }
-  }, [lines]);
+    return () => {
+      ws.close();
+    };
+  }, []);
 
   const handleMouseDown = (e: KonvaEventObject<MouseEvent>) => {
     isDrawing.current = true;
@@ -76,6 +90,7 @@ export default function Canvas(roomId: any) {
 
   const handleMouseUp = () => {
     isDrawing.current = false;
+    debouncedDrawingPost(lines,roomId.roomId[0],session.data?.user.id || "");
   };
 
   return (
