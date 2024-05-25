@@ -5,23 +5,34 @@ import { KonvaEventObject } from "konva/lib/Node";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
-import { FaEraser, FaPencilAlt } from "react-icons/fa";
+import { FaCircle, FaEraser, FaPencilAlt } from "react-icons/fa";
 import { Layer, Line, Stage } from "react-konva";
-import { debounce } from "lodash";
+import { ColorPicker, useColor } from "react-color-palette";
+import "react-color-palette/css";
+import { HexColorPicker } from "react-colorful";
+import { IoColorFill } from "react-icons/io5";
 interface LineProps {
   tool: string;
   points: number[];
+  color: string;
+  size: number;
 }
 
+const arraySize = [5, 7, 10, 12, 15];
 export default function Canvas(roomId: any) {
+  const [size, setSize] = useState(5);
+  const selected = size;
+  const [color, setColor] = useState("#df4b26");
   const session = useSession();
-  const router = useRouter();
   const [tool, setTool] = useState("pen");
-  const [lines, setLines] = useState<LineProps[]>([
-  ]);
+  const [lines, setLines] = useState<LineProps[]>([]);
   const isDrawing = React.useRef(false);
 
-  const debouncedDrawingPost = async (lines:LineProps[], roomId:string, userId:string) => {
+  const debouncedDrawingPost = async (
+    lines: LineProps[],
+    roomId: string,
+    userId: string
+  ) => {
     try {
       await axios.post(
         `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/canvas/add/?roomId=${roomId}&userId=${userId}`,
@@ -32,7 +43,7 @@ export default function Canvas(roomId: any) {
     } catch (error) {
       console.log(error);
     }
-  }
+  };
 
   useEffect(() => {
     if (!session.data?.user.id) return;
@@ -40,6 +51,7 @@ export default function Canvas(roomId: any) {
       const response = await axios.get(
         `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/canvas/get/?roomId=${roomId.roomId[0]}&userId=${session?.data?.user.id}`
       );
+
       setLines(response.data);
     };
     try {
@@ -60,7 +72,7 @@ export default function Canvas(roomId: any) {
         return;
       }
       if (message.type === "drawing_updated") {
-          setLines(message.drawing);
+        setLines(message.drawing);
       }
     };
     return () => {
@@ -74,7 +86,10 @@ export default function Canvas(roomId: any) {
     const stage = target.getStage();
     const pos = stage?.getPointerPosition();
     if (pos && pos.x && pos.y) {
-      setLines([...lines, { tool, points: [pos.x, pos.y] }]);
+      setLines([
+        ...lines,
+        { tool, points: [pos.x, pos.y], color: color, size: size },
+      ]);
     }
   };
 
@@ -90,12 +105,12 @@ export default function Canvas(roomId: any) {
 
   const handleMouseUp = () => {
     isDrawing.current = false;
-    debouncedDrawingPost(lines,roomId.roomId[0],session.data?.user.id || "");
+    debouncedDrawingPost(lines, roomId.roomId[0], session.data?.user.id || "");
   };
 
   return (
-    <div className="overflow-x-hidden">
-      <div className="flex gap-4 mb-2">
+    <div className="overflow-x-hidden flex flex-col ">
+      <div className="flex gap-4 mb-2 w-full items-center justify-center">
         <FaPencilAlt
           onClick={() => {
             setTool("pen");
@@ -112,6 +127,28 @@ export default function Canvas(roomId: any) {
             tool === "eraser" && "border-2 border-black/40 rounded-xl"
           } p-2 text-4xl `}
         />
+        <IoColorFill
+          onClick={() => {
+            setTool("color");
+          }}
+          className={`${
+            tool === "color" && "border-2 border-black/40 rounded-xl"
+          } p-2 text-4xl `}
+        />
+        <div className=" absolute left-10">
+          {tool === "color" && (
+            <HexColorPicker color={color} onChange={setColor} />
+          )}
+        </div>
+        <div className="flex items-center ">
+          {arraySize.map((size) => {
+            return (
+              <div className="flex items-center">
+                {strokeButton(size, setSize, selected)}
+              </div>
+            );
+          })}
+        </div>
       </div>
       <Stage
         className="border-2 border-black/80"
@@ -126,8 +163,8 @@ export default function Canvas(roomId: any) {
             <Line
               key={i}
               points={line.points}
-              stroke="#df4b26"
-              strokeWidth={5}
+              stroke={line.color}
+              strokeWidth={line.size}
               tension={0.5}
               lineCap="round"
               lineJoin="round"
@@ -141,3 +178,16 @@ export default function Canvas(roomId: any) {
     </div>
   );
 }
+
+const strokeButton = (value: number, setSize: any, selected: number) => {
+  return (
+    <button
+      onClick={() => {
+        setSize(value);
+      }}
+      className={`${selected === value && "border-2 border-black"} p-3`}
+    >
+      <FaCircle style={{ fontSize: `${value}px` }} />
+    </button>
+  );
+};

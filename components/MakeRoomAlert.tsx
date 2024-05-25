@@ -16,6 +16,7 @@ import { useSetRecoilState } from "recoil";
 import { roomUserAtom } from "@/states/roomUser";
 import axios from "axios";
 import { useSession } from "next-auth/react";
+import Error from "./Error";
 
 interface MakeRoomProps {
   name: string;
@@ -25,6 +26,7 @@ interface MakeRoomProps {
 export default function MakeRoomAlert() {
   const session = useSession();
   const router = useRouter();
+  const [error, setError] = useState("");
   const setRoomUser = useSetRecoilState(roomUserAtom);
   const [showPassword, setShowPassword] = useState(false);
   const [room, setRoom] = useState<MakeRoomProps>({
@@ -37,16 +39,21 @@ export default function MakeRoomAlert() {
   };
 
   const handleCreateRoom = async () => {
-    const res = await axios.post(
-      `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/room/makeRoom/?userId=${session.data?.user.id}`,
-      {
-        name: room.name,
-        password: room.password,
-      }
-    );
-    const roomid = res.data.room?.id;
-    setRoomUser(res.data.roomUser);
-    router.push(`/room/${roomid}`);
+    try {
+      const res = await axios.post(
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/room/makeRoom/?userId=${session.data?.user.id}`,
+        {
+          name: room.name,
+          password: room.password,
+        }
+      );
+      const roomid = res.data.room?.id;
+      setRoomUser(res.data.roomUser);
+      router.push(`/room/${roomid}`);
+    } catch (error) {
+      setError("Room name should be unique");
+      return;
+    }
   };
 
   return (
@@ -104,6 +111,7 @@ export default function MakeRoomAlert() {
               Create Room
             </button>
           </div>
+          {error && <Error error={error}/>}
         </div>
       </DialogContent>
     </Dialog>

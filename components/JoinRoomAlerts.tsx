@@ -17,6 +17,9 @@ import { useSetRecoilState } from "recoil";
 import { roomUserAtom } from "@/states/roomUser";
 import axios from "axios";
 import { useSession } from "next-auth/react";
+import { Alert, AlertDescription, AlertTitle } from "./ui/alert";
+import { IoAlertCircle } from "react-icons/io5";
+import Error from "./Error";
 
 interface JoinRoomProps {
   name: string;
@@ -32,22 +35,27 @@ export default function JoinRoomAlert() {
     name: "",
     password: "",
   });
-
+  const [error, setError] = useState("");
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
   };
 
   const handleJoinRoom = async () => {
-    const res = await axios.post(
-      `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/room/joinRoom/?userId=${session?.data?.user.id}`,
-      {
-        name: room.name,
-        password: room.password,
-      }
-    );
-    const roomid = res.data.room?.id;
-    setRoomUser(res.data.roomUser);
-    router.push(`/room/${roomid}`);
+    try {
+      const res = await axios.post(
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/room/joinRoom/?userId=${session?.data?.user.id}`,
+        {
+          name: room.name,
+          password: room.password,
+        }
+      );
+      const roomid = res.data.room?.id;
+      setRoomUser(res.data.roomUser);
+      router.push(`/room/${roomid}`);
+    } catch (error) {
+      setError("Invalid Credentials");
+      return;
+    }
   };
   return (
     <Dialog>
@@ -78,6 +86,9 @@ export default function JoinRoomAlert() {
               type="text"
               placeholder="Room Name"
               className="rounded-3xl border-2 p-2 text-center"
+              onClick={() => {
+                setError("");
+              }}
             />
           </div>
           <div className="relative">
@@ -88,6 +99,9 @@ export default function JoinRoomAlert() {
               type={showPassword ? "text" : "password"}
               placeholder="Password"
               className="rounded-3xl border-2 p-2 text-center"
+              onClick={() => {
+                setError("");
+              }}
             />
             <button
               onClick={togglePasswordVisibility}
@@ -104,6 +118,9 @@ export default function JoinRoomAlert() {
               Join Room
             </button>
           </div>
+          {error && (
+            <Error error={error} />
+          )}
         </div>
       </DialogContent>
     </Dialog>

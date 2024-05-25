@@ -31,7 +31,9 @@ export default function Navbar() {
             Log In
             <div className="h-[2px] bg-black w-0 group-hover:w-full transition-all duration-500"></div>
           </div>
-          <button className="bg-black text-white rounded-3xl px-3 py-2 text-[14px] flex items-center hover:bg-black/80">
+          <button 
+          onClick={() => router.push("/signup")}
+          className="bg-black text-white rounded-3xl px-3 py-2 text-[14px] flex items-center hover:bg-black/80">
             Sign up
           </button>
         </div>

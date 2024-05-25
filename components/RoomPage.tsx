@@ -8,6 +8,7 @@ import { useSession } from "next-auth/react";
 import { useRecoilState } from "recoil";
 import { roomUserAtom } from "@/states/roomUser";
 import Canvas from "./Canvas";
+import Chat from "./Chat";
 interface RoomProps {
   createdBy: {
     createdAt: string;
@@ -47,6 +48,10 @@ export default function RoomPage() {
   });
   const { roomid } = useParams();
   const [roomUser, setRoomUser] = useRecoilState(roomUserAtom);
+
+  // if(!session?.data?.user.id){
+  //   router.push("/")
+  // }
 
   useEffect(() => {
     const fetchRoomInfo = async () => {
@@ -147,7 +152,9 @@ export default function RoomPage() {
         <div className="w-[50%] ">
           <Canvas roomId={roomid}/>
         </div>
-        <div className="w-[20%]">Hi3</div>
+        <div className="w-[20%]">
+          <Chat roomId={roomid}/>
+        </div>
       </div>
     </div>
   );
