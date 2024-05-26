@@ -124,7 +124,7 @@ export default function RoomPage() {
         />
       </div>
       <div className="flex justify-center w-full gap-10 mt-10">
-        <div className="w-[30%] border-r-2 border-t-2 hidden md:flex">
+        <div className="border-r-2 border-t-2 hidden md:flex">
           <div className="w-[12vw]">
           {room.roomUsers.map((user) => (
             <div
