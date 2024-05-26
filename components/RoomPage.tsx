@@ -109,8 +109,8 @@ export default function RoomPage() {
     }
   };
   return (
-    <div className="flex justify-center  flex-col w-[100vw] px-[250px]">
-      <div className="flex gap-3 items-center">
+    <div className="flex justify-center  flex-col w-[100vw]">
+      <div className="flex gap-3 items-center pl-10 md:px-[200px]">
         <div className={`text-2xl font-bold flex flex-col justify-end w-fit`}>
           <p className={`${serif.className}`}>{room?.room.name}</p>
           <span className="text-xs text-black/80 flex justify-end">
@@ -124,7 +124,8 @@ export default function RoomPage() {
         />
       </div>
       <div className="flex justify-center w-full gap-10 mt-10">
-        <div className="w-[20%] border-r-2 border-t-2">
+        <div className="w-[30%] border-r-2 border-t-2 hidden md:flex">
+          <div className="w-[12vw]">
           {room.roomUsers.map((user) => (
             <div
               className="flex justify-start items-center text- md gap-2 py-2 pl-5 border-b-2"
@@ -138,8 +139,8 @@ export default function RoomPage() {
               <p
                 className={`${
                   user.name === session.data?.user?.name
-                    ? "text-black font-medium cursor-pointer text-sm"
-                    : "cursor-pointer text-black/70 font-normal hover:text-black text-sm"
+                    ? "text-black font-medium cursor-pointer text-sm max-w-full"
+                    : "cursor-pointer text-black/70 font-normal hover:text-black text-sm max-w-full"
                 }`}
               >
                 {user.name === session.data?.user?.name
@@ -148,12 +149,16 @@ export default function RoomPage() {
               </p>
             </div>
           ))}
+          </div>
         </div>
-        <div className="w-[50%] ">
+ 
+        <div className="md:flex-row flex flex-col justify-center items-center gap-3">
+        <div className="w-[80vw] md:w-[40vw]">
           <Canvas roomId={roomid}/>
         </div>
-        <div className="w-[20%]">
+        <div className="w-[60vw] md:w-[20vw]">
           <Chat roomId={roomid}/>
+        </div>
         </div>
       </div>
     </div>

@@ -10,14 +10,14 @@ export default function Navbar() {
   const router = useRouter();
   const session = useSession();
   const handleLogout = async () => {
-    const res = await signOut();
+    await signOut({ callbackUrl: "/" });
   };
   return (
-    <div className="h-[12vh] flex justify-between items-center px-20 ">
+    <div className="h-[12vh] flex justify-between items-center px-5 md:px-20 ">
       <div>
         <a
           href="/"
-          className={`${alura.className} text-5xl cursor-pointer hover:text-black/70`}
+          className={`${alura.className} text-3xl font-bold md:text-5xl cursor-pointer hover:text-black/70`}
         >
           Scribble
         </a>
@@ -39,9 +39,9 @@ export default function Navbar() {
         </div>
       ) : (
         <div className="flex gap-4 items-center">
-          <div className={` ${alura.className} text-[22px]`}>
+          <div className={` ${alura.className} text-[19px] md:text-[22px]`}>
             Hi,
-            <span className={`${work.className} text-[18px] `}>
+            <span className={`${work.className} text-[15px] md:text-[18px] `}>
               {" "}
               {session.data.user.name}
             </span>
