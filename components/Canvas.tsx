@@ -62,7 +62,7 @@ export default function Canvas(roomId: any) {
   }, [session]);
 
   useEffect(() => {
-    const ws = new WebSocket("ws://localhost:8080");
+    const ws = new WebSocket(`${process.env.NEXT_PUBLIC_WEBSOCKET_URL}`);
     ws.onmessage = (event) => {
       let message;
       try {

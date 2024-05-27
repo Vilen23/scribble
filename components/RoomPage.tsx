@@ -59,13 +59,12 @@ export default function RoomPage() {
         `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/room/getRoom/?roomId=${roomid[0]}&userId=${session.data?.user.id}`
       );
       setRoom(res.data);
-      console.log(res.data)
     };
     if (session.data?.user.id) fetchRoomInfo();
   }, [session.data?.user.id]);
 
   useEffect(() => {
-    const ws = new WebSocket(`ws://localhost:8080`);
+    const ws = new WebSocket(`${process.env.NEXT_PUBLIC_WEBSOCKET_URL}`);
     ws.onmessage = function (event) {
       let message;
       try {

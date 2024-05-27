@@ -22,19 +22,17 @@ export default function Chat(roomId: any) {
     const res = await axios.get(
       `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/chat/get/?userId=${session.data?.user.id}&roomId=${room}`
     );
-    console.log(res);
     setChat(res.data)
   };
 
   useEffect(()=>{
   if(session.data?.user.id){
     getMessages();
-    const ws = new WebSocket("ws://localhost:8080");
+    const ws = new WebSocket(`${process.env.NEXT_PUBLIC_WEBSOCKET_URL}`);
     ws.onmessage = (event)=>{
       let message;
       try{
         message = JSON.parse(event.data);
-        console.log(message);
       }catch(error){
         console.log(error);
         return;
@@ -50,7 +48,6 @@ export default function Chat(roomId: any) {
   },[session])
 
   const handleSendMessage = async (message: string) => {
-    console.log("something is happening");
     try {
       const res = await axios.post(
         `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/chat/add/?userId=${session.data?.user.id}&roomId=${room}`,{
