@@ -7,5 +7,6 @@ export const roomUserAtom = atom({
         userId:'',
         id:''
     },
+    
     effects_UNSTABLE: [persistAtom]
 })
