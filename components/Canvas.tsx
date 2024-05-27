@@ -135,7 +135,7 @@ export default function Canvas(roomId: any) {
             tool === "color" && "border-2 border-black/40 rounded-xl"
           } p-2 text-4xl `}
         />
-        <div className=" absolute left-10">
+        <div className=" absolute  top-[250px] z-50">
           {tool === "color" && (
             <HexColorPicker color={color} onChange={setColor} />
           )}

@@ -12,13 +12,10 @@ import { work } from "./Navbar";
 import { serif } from "./Hero";
 import { FaRegEye, FaRegEyeSlash } from "react-icons/fa";
 import { useRouter } from "next/navigation";
-import { JoinRoom } from "@/lib/actions/joinroom";
 import { useSetRecoilState } from "recoil";
 import { roomUserAtom } from "@/states/roomUser";
 import axios from "axios";
 import { useSession } from "next-auth/react";
-import { Alert, AlertDescription, AlertTitle } from "./ui/alert";
-import { IoAlertCircle } from "react-icons/io5";
 import Error from "./Error";
 
 interface JoinRoomProps {
@@ -50,6 +47,7 @@ export default function JoinRoomAlert() {
         }
       );
       const roomid = res.data.room?.id;
+      
       setRoomUser(res.data.roomUser);
       router.push(`/room/${roomid}`);
     } catch (error) {

@@ -59,6 +59,7 @@ export default function RoomPage() {
         `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/room/getRoom/?roomId=${roomid[0]}&userId=${session.data?.user.id}`
       );
       setRoom(res.data);
+      console.log(res.data)
     };
     if (session.data?.user.id) fetchRoomInfo();
   }, [session.data?.user.id]);
