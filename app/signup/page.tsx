@@ -12,7 +12,7 @@ export default  function Page() {
           }
         };
         checkSession();
-      }, []);
+      }, [session?.data?.user]);
   return (
     <Signup/>
   );

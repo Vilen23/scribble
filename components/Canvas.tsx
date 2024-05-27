@@ -57,7 +57,7 @@ export default function Canvas(roomId: any) {
     } catch (error) {
       console.log(error);
     }
-  }, [session]);
+  }, [session,roomId.roomId]);
 
   useEffect(() => {
     const ws = new WebSocket(`${process.env.NEXT_PUBLIC_WEBSOCKET_URL}`);
