@@ -21,7 +21,7 @@ export default function Signin() {
     if (session.data?.user) {
       router.push("/");
     }
-  }, [session]);
+  }, [session,router]);
 
   const handleLogin = async () => {
     const res = await signIn("credentials", {

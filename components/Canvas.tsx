@@ -3,11 +3,9 @@ import axios from "axios";
 import Konva from "konva";
 import { KonvaEventObject } from "konva/lib/Node";
 import { useSession } from "next-auth/react";
-import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import { FaCircle, FaEraser, FaPencilAlt } from "react-icons/fa";
 import { Layer, Line, Stage } from "react-konva";
-import { ColorPicker, useColor } from "react-color-palette";
 import "react-color-palette/css";
 import { HexColorPicker } from "react-colorful";
 import { IoColorFill } from "react-icons/io5";
@@ -78,7 +76,7 @@ export default function Canvas(roomId: any) {
     return () => {
       ws.close();
     };
-  }, []);
+  }, [roomId.roomId]);
 
   const handleMouseDown = (e: KonvaEventObject<MouseEvent>) => {
     isDrawing.current = true;
@@ -143,7 +141,7 @@ export default function Canvas(roomId: any) {
         <div className="flex items-center ">
           {arraySize.map((size) => {
             return (
-              <div className="flex items-center">
+              <div key={size} className="flex items-center">
                 {strokeButton(size, setSize, selected)}
               </div>
             );

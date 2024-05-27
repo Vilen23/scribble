@@ -45,7 +45,7 @@ export default function Chat(roomId: any) {
       ws.close()
     }
   }
-  },[session])
+  },[session,getMessages])
 
   const handleSendMessage = async (message: string) => {
     try {

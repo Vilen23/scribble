@@ -61,7 +61,7 @@ export default function RoomPage() {
       setRoom(res.data);
     };
     if (session.data?.user.id) fetchRoomInfo();
-  }, [session.data?.user.id]);
+  }, [session.data?.user.id,roomid]);
 
   useEffect(() => {
     const ws = new WebSocket(`${process.env.NEXT_PUBLIC_WEBSOCKET_URL}`);

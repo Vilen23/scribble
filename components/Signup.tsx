@@ -19,7 +19,7 @@ export default function Signup() {
     if (session.data?.user) {
       router.push("/");
     }
-  }, [session]);
+  }, [session,router]);
   
   const handleLogin = async () => {
     const res = await signIn("credentials", {
